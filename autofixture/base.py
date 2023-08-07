@@ -275,6 +275,9 @@ class AutoFixtureBase(object):
                 return None
         kwargs = {}
 
+        if "SRPatchedJSONField" in str(field.__class__):
+            return generators.SRPatchedJSONFieldGenerator()
+
         if field.name in self.field_values:
             value = self.field_values[field.name]
             if isinstance(value, generators.Generator):
@@ -384,7 +387,7 @@ class AutoFixtureBase(object):
                     max_value=field.MAX_BIGINT,
                     **kwargs)
         if isinstance(field, ImageField):
-            return generators.ImageGenerator(storage=field.storage, **kwargs)
+            return None
         for field_class, generator in self.field_to_generator.items():
             if isinstance(field, field_class):
                 return generator(**kwargs)
